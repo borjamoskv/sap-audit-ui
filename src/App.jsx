@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Sidebar from './components/Sidebar'
 import MetricCards from './components/MetricCards'
 import TomRadar from './components/TomRadar'
@@ -5,6 +6,12 @@ import OliverImpact from './components/OliverImpact'
 import AuditLog from './components/AuditLog'
 
 export default function App() {
+  const [clock, setClock] = useState(new Date().toLocaleTimeString('es-ES', { hour12: false }))
+  useEffect(() => {
+    const t = setInterval(() => setClock(new Date().toLocaleTimeString('es-ES', { hour12: false })), 1000)
+    return () => clearInterval(t)
+  }, [])
+
   return (
     <div className="flex h-screen bg-[#050505] text-gray-200 overflow-hidden font-sans selection:bg-[#ccff00] selection:text-[#0a0a0a]">
       <Sidebar />
@@ -29,13 +36,13 @@ export default function App() {
                   </span>
                 </div>
                 <p className="text-gray-600 font-mono text-xs tracking-wide">
-                  Target: <span className="text-gray-400">Corporación Alba / Grupo March</span> · Engine: <span className="text-[#ccff00]">TOM</span> & <span className="text-[#ff3366]">OLIVER</span>
+                  Target: <span className="text-gray-400">GORDACORP Holdings / SAP R/3</span> · Engine: <span className="text-[#ccff00]">TOM</span> & <span className="text-[#ff3366]">OLIVER</span> · <span className="text-gray-500">{clock}</span>
                 </p>
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-right">
                   <span className="block text-[10px] font-mono text-gray-600 uppercase tracking-wider">Lote</span>
-                  <span className="text-xs font-mono text-[#06d6a0] text-glow-teal font-bold">L-4600M-EUR</span>
+                  <span className="text-xs font-mono text-[#06d6a0] text-glow-teal font-bold">L-6600M-EUR</span>
                 </div>
                 <div className="h-8 w-px bg-[#1a1a1a]"></div>
                 <div className="text-right">

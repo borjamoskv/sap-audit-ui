@@ -9,7 +9,7 @@ const icons = {
 
 export default function MetricCards() {
   const metrics = [
-    { label: 'NAV Auditado', value: '€4.6B', sub: 'Corporación Alba', trend: '+1.2%', bad: false, iconKey: 'shield', color: '#06d6a0' },
+    { label: 'NAV Auditado', value: '€6.6B', sub: 'GORDACORP Holdings', trend: '+1.2%', bad: false, iconKey: 'shield', color: '#06d6a0' },
     { label: 'Volatilidad Mediana', value: '28.5%', sub: 'Private Equity Port.', trend: '+4.1pp', bad: true, iconKey: 'up', color: '#d4af37' },
     { label: 'Outliers IQR', value: '7', sub: 'Anomalías detectadas', trend: '+3 nuevo', bad: true, iconKey: 'alert', color: '#d4af37' },
     { label: 'Exposición OLIVER', value: '-€633M', sub: 'Impacto regulatorio', trend: 'CRÍTICA', bad: true, glow: true, iconKey: 'down', color: '#ff3366' }
