@@ -7,11 +7,13 @@ const icons = {
   shield: Shield
 };
 
-export default function MetricCards() {
+export default function MetricCards({ endocrine = {} }) {
+  const { cortisol = 0, dopamine = 0.5 } = endocrine;
+
   const metrics = [
-    { label: 'NAV Auditado', value: '€6.6B', sub: 'GORDACORP Holdings', trend: '+1.2%', bad: false, iconKey: 'shield', color: '#06d6a0' },
-    { label: 'Volatilidad Mediana', value: '28.5%', sub: 'Private Equity Port.', trend: '+4.1pp', bad: true, iconKey: 'up', color: '#d4af37' },
-    { label: 'Outliers IQR', value: '7', sub: 'Anomalías detectadas', trend: '+3 nuevo', bad: true, iconKey: 'alert', color: '#d4af37' },
+    { label: 'NAV Auditado', value: '€6.6B', sub: 'Alcázar Capital Group', trend: '+1.2%', bad: false, iconKey: 'shield', color: '#06d6a0' },
+    { label: 'Cortisol (Estrés)', value: `${(cortisol * 100).toFixed(0)}%`, sub: 'Respuesta del sistema', trend: cortisol > 0.6 ? 'ALTO' : 'NOMINAL', bad: cortisol > 0.6, glow: cortisol > 0.8, iconKey: 'alert', color: cortisol > 0.6 ? '#ff3366' : '#ccff00' },
+    { label: 'Dopamina (Creatividad)', value: `${(dopamine * 100).toFixed(0)}%`, sub: 'Modo de respuesta', trend: dopamine > 0.7 ? 'EXPANSIVO' : 'ESTÁNDAR', bad: false, iconKey: 'up', color: '#6600ff' },
     { label: 'Exposición OLIVER', value: '-€633M', sub: 'Impacto regulatorio', trend: 'CRÍTICA', bad: true, glow: true, iconKey: 'down', color: '#ff3366' }
   ];
 

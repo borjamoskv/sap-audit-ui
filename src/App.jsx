@@ -65,7 +65,7 @@ export default function App() {
                   </span>
                 </div>
                 <p className="text-gray-600 font-mono text-xs tracking-wide">
-                  Target: <span className="text-gray-400">GORDACORP Holdings / SAP R/3</span> · Engine: <span style={{ color: accentColor }}>TOM</span> & <span className="text-[#ff3366]">OLIVER</span> · <span className="text-gray-500">{clock}</span>
+                  Target: <span className="text-gray-400">Alcázar Capital Group / SAP S/4HANA</span> · Engine: <span style={{ color: accentColor }}>TOM</span> & <span className="text-[#ff3366]">OLIVER</span> · <span className="text-gray-500">{clock}</span>
                 </p>
               </div>
               <div className="flex items-center gap-3">
