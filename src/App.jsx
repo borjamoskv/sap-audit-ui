@@ -6,15 +6,40 @@ import OliverImpact from './components/OliverImpact'
 import AuditLog from './components/AuditLog'
 
 export default function App() {
+  const [activeView, setActiveView] = useState('overview')
   const [clock, setClock] = useState(new Date().toLocaleTimeString('es-ES', { hour12: false }))
+  const [bioState, setBioState] = useState({
+    endocrine: { cortisol: 0, dopamine: 0.5, serotonin: 0.5, adrenaline: 0, response_style: 'balanced' },
+    circadian: { is_sleeping: false, phase_name: 'WAKE' }
+  })
+
   useEffect(() => {
     const t = setInterval(() => setClock(new Date().toLocaleTimeString('es-ES', { hour12: false })), 1000)
-    return () => clearInterval(t)
+    
+    // Simular polling del daemon status (en producción esto vendría de una API)
+    const bioT = setInterval(() => {
+      // Mock de actualización para ver el dinamismo en el UI
+      setBioState(prev => ({
+        ...prev,
+        endocrine: {
+          ...prev.endocrine,
+          cortisol: Math.random() * 0.3 + (prev.endocrine.cortisol > 0.5 ? -0.1 : 0.05)
+        }
+      }))
+    }, 5000)
+
+    return () => {
+      clearInterval(t)
+      clearInterval(bioT)
+    }
   }, [])
+
+  const accentColor = bioState.endocrine.cortisol > 0.6 ? '#ff3366' : '#ccff00'
+  const glowClass = bioState.endocrine.cortisol > 0.6 ? 'text-glow-red' : 'text-glow-cyber'
 
   return (
     <div className="flex h-screen bg-[#050505] text-gray-200 overflow-hidden font-sans selection:bg-[#ccff00] selection:text-[#0a0a0a]">
-      <Sidebar />
+      <Sidebar active={activeView} onNavigate={setActiveView} />
 
       <main className="flex-1 flex flex-col h-full overflow-y-auto relative">
         {/* Grid background */}
@@ -28,15 +53,19 @@ export default function App() {
             <div className="flex justify-between items-end border-b border-[#141414] pb-5">
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-black tracking-tight text-white">
-                    Auditoría <span className="text-[#ccff00] text-glow-cyber">"Con Efecto"</span>
+                  <h1 className="text-3xl font-black tracking-tight text-white transition-colors duration-500">
+                    Auditoría <span style={{ color: accentColor }} className={glowClass}>"Con Efecto"</span>
                   </h1>
-                  <span className="px-2 py-0.5 bg-[#ff3366]/10 border border-[#ff3366]/20 rounded text-[9px] font-mono text-[#ff3366] uppercase tracking-widest font-bold">
-                    Live
+                  <span className={`px-2 py-0.5 border rounded text-[9px] font-mono uppercase tracking-widest font-bold transition-all duration-500 ${
+                    bioState.circadian.is_sleeping 
+                      ? 'bg-[#6600ff]/10 border-[#6600ff]/20 text-[#6600ff]' 
+                      : 'bg-[#06d6a0]/10 border-[#06d6a0]/20 text-[#06d6a0]'
+                  }`}>
+                    {bioState.circadian.phase_name}
                   </span>
                 </div>
                 <p className="text-gray-600 font-mono text-xs tracking-wide">
-                  Target: <span className="text-gray-400">GORDACORP Holdings / SAP R/3</span> · Engine: <span className="text-[#ccff00]">TOM</span> & <span className="text-[#ff3366]">OLIVER</span> · <span className="text-gray-500">{clock}</span>
+                  Target: <span className="text-gray-400">GORDACORP Holdings / SAP R/3</span> · Engine: <span style={{ color: accentColor }}>TOM</span> & <span className="text-[#ff3366]">OLIVER</span> · <span className="text-gray-500">{clock}</span>
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -53,21 +82,40 @@ export default function App() {
             </div>
           </header>
 
-          {/* KPIs */}
+          {/* KPIs — always visible */}
           <section className="mb-6">
-            <MetricCards />
+            <MetricCards endocrine={bioState.endocrine} />
           </section>
 
-          {/* Analytics Grid */}
-          <section className="grid grid-cols-1 xl:grid-cols-2 gap-5 mb-6">
-            <TomRadar />
-            <OliverImpact />
-          </section>
+          {/* View-based content */}
+          {(activeView === 'overview' || activeView === 'tom') && (
+            <section className={`${activeView === 'tom' ? '' : 'grid grid-cols-1 xl:grid-cols-2 gap-5'} mb-6`}>
+              <TomRadar />
+              {activeView === 'overview' && <OliverImpact />}
+            </section>
+          )}
 
-          {/* Audit Log Terminal */}
-          <section className="mb-8">
-            <AuditLog />
-          </section>
+          {(activeView === 'overview' || activeView === 'oliver') && activeView !== 'tom' && (
+            <section className="mb-6">
+              {activeView === 'oliver' && <OliverImpact />}
+            </section>
+          )}
+
+          {(activeView === 'overview' || activeView === 'ledger') && (
+            <section className="mb-8">
+              <AuditLog />
+            </section>
+          )}
+
+          {/* Print button — visible on all views */}
+          <div className="mb-6 flex justify-end print:hidden">
+            <button
+              onClick={() => window.print()}
+              className="flex items-center gap-2 px-4 py-2 bg-[#111] hover:bg-[#161616] border border-[#222] text-gray-400 hover:text-gray-200 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all duration-300"
+            >
+              🖨 Exportar Informe
+            </button>
+          </div>
           
           {/* Footer */}
           <footer className="pt-5 border-t border-[#111] flex justify-between items-center text-[10px] font-mono text-gray-700 animate-fade-in-up delay-6">

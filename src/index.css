@@ -53,7 +53,7 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   }
   
   .text-glow-cyber {
@@ -124,4 +124,59 @@
   animation: blink-cursor 1s step-end infinite;
   color: var(--color-cyber-lime);
   font-size: 0.75rem;
+}
+
+/* Print Styles — PDF Export */
+@media print {
+  body {
+    background: white !important;
+    color: #111 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide sidebar, animations, interactive elements */
+  aside, .scan-overlay, .scanline, .print\\:hidden,
+  button:not([data-print]), .animate-ping {
+    display: none !important;
+  }
+
+  main {
+    overflow: visible !important;
+    width: 100% !important;
+  }
+
+  /* Clean up panels for print */
+  .panel-notch {
+    background: #fafafa !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    page-break-inside: avoid;
+  }
+
+  /* Ensure charts are visible */
+  .recharts-wrapper {
+    page-break-inside: avoid;
+  }
+
+  /* Remove glows */
+  .text-glow-cyber, .text-glow-crimson, .text-glow-teal {
+    text-shadow: none !important;
+  }
+
+  /* Print header */
+  header {
+    border-bottom: 2px solid #333 !important;
+  }
+
+  footer {
+    border-top: 1px solid #ccc !important;
+    color: #666 !important;
+  }
+
+  @page {
+    margin: 1.5cm;
+    size: A4 landscape;
+  }
 }
